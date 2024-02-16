@@ -1,18 +1,29 @@
-//import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {ICategoryCreate, IUploadedFile} from "./types.ts";
 import {Button, Form, Input, Row, Upload} from "antd";
 import {Link} from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
 import {UploadChangeParam} from "antd/es/upload";
 import { PlusOutlined } from '@ant-design/icons';
+import http_common from "../../http_common.ts";
 
 const CategoryCreatePage = () => {
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [form] = Form.useForm<ICategoryCreate>();
 
     const onHandlerSubmit = async (values: ICategoryCreate) => {
-        console.log("Form submit", values);
+        try {
+            await http_common.post("/api/categories", values, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            navigate('/');
+        }
+        catch(ex) {
+            console.log("Exception create category", ex);
+        }
     }
 
     return (
