@@ -1,6 +1,7 @@
 package org.example.mapper;
 
 import org.example.dto.CategoryCreateDTO;
+import org.example.dto.CategoryEditDTO;
 import org.example.dto.CategoryItemDTO;
 import org.example.entities.CategoryEntity;
 import org.mapstruct.Mapper;
@@ -16,4 +17,7 @@ public interface CategoryMapper {
 
     @Mapping(target = "image", ignore = true)
     CategoryEntity categoryEntityByCategoryCreateDTO(CategoryCreateDTO category);
+
+    @Mapping(target = "image", ignore = true)
+    CategoryEntity categoryEditDto(CategoryEditDTO dto);
 }
