@@ -1,5 +1,5 @@
 import {useNavigate} from "react-router-dom";
-import {ICategoryCreate, IUploadedFile} from "./types.ts";
+import {ICategoryCreate, IUploadedFile} from "../types.ts";
 import {Button, Form, Input, Row, Upload} from "antd";
 import {Link} from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
