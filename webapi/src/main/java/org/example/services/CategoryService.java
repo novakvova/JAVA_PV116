@@ -6,4 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface CategoryService {
     Page<CategoryItemDTO> getAll(Pageable pageable);
+    Page<CategoryItemDTO> searchByName(String name, Pageable pageable);
 }

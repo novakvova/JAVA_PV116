@@ -103,4 +103,11 @@ public class CategoryController {
         var result =  categoryMapper.categoryItemDTO(entity);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<CategoryItemDTO>> searchByName(@RequestParam(required = false) String name,
+                                                              Pageable pageable) {
+        Page<CategoryItemDTO> categories = categoryService.searchByName(name, pageable);
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
 }
