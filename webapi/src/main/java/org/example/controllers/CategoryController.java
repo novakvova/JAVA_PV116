@@ -1,9 +1,9 @@
 package org.example.controllers;
 
 import lombok.AllArgsConstructor;
-import org.example.dto.CategoryCreateDTO;
-import org.example.dto.CategoryEditDTO;
-import org.example.dto.CategoryItemDTO;
+import org.example.dto.category.CategoryCreateDTO;
+import org.example.dto.category.CategoryEditDTO;
+import org.example.dto.category.CategoryItemDTO;
 import org.example.mapper.CategoryMapper;
 import org.example.repositories.CategoryRepository;
 import org.example.services.CategoryService;
@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @AllArgsConstructor

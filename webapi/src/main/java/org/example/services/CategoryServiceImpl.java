@@ -1,7 +1,7 @@
 package org.example.services;
 
 import lombok.AllArgsConstructor;
-import org.example.dto.CategoryItemDTO;
+import org.example.dto.category.CategoryItemDTO;
 import org.example.entities.CategoryEntity;
 import org.example.mapper.CategoryMapper;
 import org.example.repositories.CategoryRepository;

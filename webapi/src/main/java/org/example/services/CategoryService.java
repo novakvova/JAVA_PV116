@@ -1,6 +1,6 @@
 package org.example.services;
 
-import org.example.dto.CategoryItemDTO;
+import org.example.dto.category.CategoryItemDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
