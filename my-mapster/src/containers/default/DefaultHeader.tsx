@@ -3,12 +3,6 @@ import {Link, useLocation} from 'react-router-dom';
 
 const {Header} = Layout;
 
-const items1 = ['Home', 'Add'].map((key) => ({
-    key,
-    label: `${key}`,
-    link: key.toLowerCase(), // Add a link property based on the item key
-}));
-
 
 const ButtonStyle = {
     margin: '0 10px 0 0',
@@ -26,11 +20,9 @@ const DefaultHeader = () => {
                 selectedKeys={[location.pathname.substr(1)]} // Highlight the selected menu item
                 style={{flex: 1, minWidth: 0}}
             >
-                {items1.map((item) => (
-                    <Menu.Item key={item.link}>
-                        <Link to={`/${item.link}`}>{item.label}</Link>
+                    <Menu.Item key={"products"}>
+                        <Link to={`/product`}>Продукти</Link>
                     </Menu.Item>
-                ))}
             </Menu>
 
             <>
