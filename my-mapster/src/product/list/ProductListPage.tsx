@@ -1,9 +1,10 @@
 import {Link, useSearchParams} from "react-router-dom";
-import {Button, Col, Collapse, Form, Input, Pagination, Row} from "antd";
+import {Button, Col, Collapse, Form, Input, Pagination, Row, Select} from "antd";
 import {useEffect, useState} from "react";
 import ProductCard from "./ProductCard.tsx";
 import {IGetProducts, IProductSearch} from "./types.ts";
 import http_common from "../../http_common.ts";
+import {ISelectItem} from "../../category/types.ts";
 
 const ProductListPage = () => {
     const [data, setData] = useState<IGetProducts>({
@@ -11,12 +12,23 @@ const ProductListPage = () => {
         totalCount: 0
     });
 
+    const [categories, setCategories] = useState<ISelectItem[]>([]);
+
+    useEffect(() => {
+        http_common.get<ISelectItem[]>("/api/categories/selectList")
+            .then(resp=> {
+                //console.log("list categories", resp.data);
+                setCategories(resp.data);
+            });
+    },[]);
+
+
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [formParams, setFormParams] = useState<IProductSearch>({
         name: searchParams.get('name') || "",
         description: searchParams.get('name') || "",
-        category: searchParams.get('category') || "",
+        categoryId: searchParams.get('category') || "",
         page: Number(searchParams.get('page')) || 1,
         size: Number(searchParams.get('size')) || 3
     });
@@ -28,7 +40,7 @@ const ProductListPage = () => {
             ...formParams,
             page: 1,
             name: values.name,
-            category: values.category,
+            categoryId: values.categoryId,
             description: values.description
         });
     }
@@ -68,6 +80,9 @@ const ProductListPage = () => {
         }
         setSearchParams(searchParams);
     };
+
+    const categoriesData = categories?.map(item => ({label: item.name, value: item.id}));
+
     return (
         <>
             <h1>Список продуктів</h1>
@@ -108,11 +123,17 @@ const ProductListPage = () => {
                             </Form.Item>
 
                             <Form.Item
-                                label="Category"
-                                name="category"
-                                htmlFor="category"
+                                label="Категорія"
+                                name="categoryId"
+                                htmlFor="categoryId"
+                                rules={[
+                                    {required: true, message: 'Це поле є обов\'язковим!'},
+                                ]}
                             >
-                                <Input autoComplete="keyword"/>
+                                <Select
+                                    placeholder="Оберіть категорію: "
+                                    options={categoriesData}
+                                />
                             </Form.Item>
 
                             <Row style={{display: 'flex', justifyContent: 'center'}}>

@@ -16,7 +16,7 @@ export interface IGetProducts {
 export interface IProductSearch {
     name?: string,
     description?: string,
-    category?: string,
+    categoryId?: string,
     page: number,
     size: number
 }

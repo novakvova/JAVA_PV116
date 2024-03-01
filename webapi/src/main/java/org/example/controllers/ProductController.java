@@ -32,11 +32,11 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<ProductSearchResultDTO> searchProducts(
             @RequestParam (defaultValue = "")String name,
-            @RequestParam (defaultValue = "")String category,
+            @RequestParam (defaultValue = "0")int categoryId,
             @RequestParam (defaultValue = "")String description,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
-        ProductSearchResultDTO searchResult = productService.searchProducts(name, category,
+        ProductSearchResultDTO searchResult = productService.searchProducts(name, categoryId,
                 description, page, size);
 
         return new ResponseEntity<>(searchResult, HttpStatus.OK);

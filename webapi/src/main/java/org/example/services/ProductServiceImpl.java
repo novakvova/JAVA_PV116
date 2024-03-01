@@ -10,16 +10,20 @@ import org.example.entities.ProductImageEntity;
 import org.example.mapper.ProductMapper;
 import org.example.repositories.ProductImageRepository;
 import org.example.repositories.ProductRepository;
+import org.example.specifications.ProductEntitySpecifications;
 import org.example.storage.FileSaveFormat;
 import org.example.storage.StorageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
+
+import static org.example.specifications.ProductEntitySpecifications.findByCategoryId;
 
 @Service
 @AllArgsConstructor
@@ -28,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductImageRepository productImageRepository;
     private final StorageService storageService;
     private final ProductMapper productMapper;
+
     @Override
     public ProductItemDTO create(ProductCreateDTO model) {
         var p = new ProductEntity();
@@ -40,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
         p.setCategory(cat);
         p.setDelete(false);
         productRepository.save(p);
-        int priority=1;
+        int priority = 1;
         for (var img : model.getFiles()) {
             try {
                 var file = storageService.SaveImage(img, FileSaveFormat.WEBP);
@@ -51,8 +56,7 @@ public class ProductServiceImpl implements ProductService {
                 pi.setDelete(false);
                 pi.setProduct(p);
                 productImageRepository.save(pi);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
             priority++;
@@ -62,20 +66,24 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductItemDTO> get() {
+//        Specification<ProductEntity> spec = findByCategoryId(0);
+
+        var test_list = productRepository.findAll(findByCategoryId(0));
+
+
         var list = new ArrayList<ProductItemDTO>();
         var data = productRepository.findAll();
-        for(var product : data) {
+        for (var product : data) {
             ProductItemDTO productItemDTO = new ProductItemDTO();
 
-            productItemDTO.setCategory( product.getCategory().getName() );
-            productItemDTO.setId( product.getId() );
-            productItemDTO.setName( product.getName() );
-            productItemDTO.setPrice( product.getPrice() );
-            productItemDTO.setDescription( product.getDescription() );
+            productItemDTO.setCategory(product.getCategory().getName());
+            productItemDTO.setId(product.getId());
+            productItemDTO.setName(product.getName());
+            productItemDTO.setPrice(product.getPrice());
+            productItemDTO.setDescription(product.getDescription());
 
             var items = new ArrayList<String>();
-            for (var img : product.getProductImages())
-            {
+            for (var img : product.getProductImages()) {
                 items.add(img.getName());
             }
             productItemDTO.setFiles(items);
@@ -86,9 +94,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductSearchResultDTO searchProducts(
-            String name, String category, String description, int page, int size) {
+            String name, int categoryId, String description, int page, int size) {
         Page<ProductEntity> result = productRepository.searchProducts(
-                "%" + name + "%", "%" + category + "%", "%" + description + "%",
+                "%" + name + "%", "", "%" + description + "%",
                 PageRequest.of(page, size));
 
         List<ProductItemDTO> products = result.getContent().stream()

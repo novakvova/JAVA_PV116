@@ -10,6 +10,6 @@ public interface ProductService {
     ProductItemDTO create(ProductCreateDTO model);
     List<ProductItemDTO> get();
 
-    ProductSearchResultDTO searchProducts(String name, String category,
+    ProductSearchResultDTO searchProducts(String name, int categoryId,
                                                  String description, int page, int size);
 }

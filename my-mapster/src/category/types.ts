@@ -34,3 +34,8 @@ export interface ICategorySearch{
     page: number,
     size: number
 }
+
+export interface ISelectItem {
+    id: number,
+    name: string
+}
