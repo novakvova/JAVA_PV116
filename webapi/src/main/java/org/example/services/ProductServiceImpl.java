@@ -3,18 +3,23 @@ package org.example.services;
 import lombok.AllArgsConstructor;
 import org.example.dto.product.ProductCreateDTO;
 import org.example.dto.product.ProductItemDTO;
+import org.example.dto.product.ProductSearchResultDTO;
 import org.example.entities.CategoryEntity;
 import org.example.entities.ProductEntity;
 import org.example.entities.ProductImageEntity;
+import org.example.mapper.ProductMapper;
 import org.example.repositories.ProductImageRepository;
 import org.example.repositories.ProductRepository;
 import org.example.storage.FileSaveFormat;
 import org.example.storage.StorageService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +27,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductImageRepository productImageRepository;
     private final StorageService storageService;
+    private final ProductMapper productMapper;
     @Override
     public ProductItemDTO create(ProductCreateDTO model) {
         var p = new ProductEntity();
@@ -76,6 +82,28 @@ public class ProductServiceImpl implements ProductService {
             list.add(productItemDTO);
         }
         return list;
+    }
+
+    @Override
+    public ProductSearchResultDTO searchProducts(
+            String name, String category, String description, int page, int size) {
+        Page<ProductEntity> result = productRepository.searchProducts(
+                "%" + name + "%", "%" + category + "%", "%" + description + "%",
+                PageRequest.of(page, size));
+
+        List<ProductItemDTO> products = result.getContent().stream()
+                .map(product -> {
+                    ProductItemDTO productItemDTO = productMapper.ProductItemDTOByProduct(product);
+
+                    // Retrieve image names for the current product
+                    List<String> imageNames = productImageRepository.findImageNamesByProduct(product);
+                    productItemDTO.setFiles(imageNames);
+
+                    return productItemDTO;
+                })
+                .collect(Collectors.toList());
+
+        return new ProductSearchResultDTO(products, (int) result.getTotalElements());
     }
 }
 

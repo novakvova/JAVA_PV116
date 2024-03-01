@@ -8,3 +8,16 @@ export interface IProductItem {
     categoryId: number,
 }
 
+export interface IGetProducts {
+    list: IProductItem[],
+    totalCount: number
+}
+
+export interface IProductSearch {
+    name?: string,
+    description?: string,
+    category?: string,
+    page: number,
+    size: number
+}
+
