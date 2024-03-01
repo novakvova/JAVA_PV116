@@ -10,12 +10,10 @@ import org.example.entities.ProductImageEntity;
 import org.example.mapper.ProductMapper;
 import org.example.repositories.ProductImageRepository;
 import org.example.repositories.ProductRepository;
-import org.example.specifications.ProductEntitySpecifications;
 import org.example.storage.FileSaveFormat;
 import org.example.storage.StorageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +21,7 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-import static org.example.specifications.ProductEntitySpecifications.findByCategoryId;
+import static org.example.specifications.ProductEntitySpecifications.*;
 
 @Service
 @AllArgsConstructor
@@ -66,11 +64,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductItemDTO> get() {
-//        Specification<ProductEntity> spec = findByCategoryId(0);
-
-        var test_list = productRepository.findAll(findByCategoryId(0));
-
-
         var list = new ArrayList<ProductItemDTO>();
         var data = productRepository.findAll();
         for (var product : data) {
@@ -95,9 +88,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductSearchResultDTO searchProducts(
             String name, int categoryId, String description, int page, int size) {
-        Page<ProductEntity> result = productRepository.searchProducts(
-                "%" + name + "%", "", "%" + description + "%",
-                PageRequest.of(page, size));
+
+        Page<ProductEntity> result = productRepository
+                .findAll(findByCategoryId(
+                        categoryId).and(findByName(name)).and(findByDescription(description)),
+                        PageRequest.of(page, size));
 
         List<ProductItemDTO> products = result.getContent().stream()
                 .map(product -> {

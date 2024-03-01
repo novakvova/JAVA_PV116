@@ -21,6 +21,4 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Integer>
             @Param("description") String description,
             Pageable pageable);
 
-//    Page<ProductEntity> searchProducts(Specification<ProductEntity> spec,
-//            Pageable pageable);
 }
