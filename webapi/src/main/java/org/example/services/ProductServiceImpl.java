@@ -90,8 +90,7 @@ public class ProductServiceImpl implements ProductService {
             String name, int categoryId, String description, int page, int size) {
 
         Page<ProductEntity> result = productRepository
-                .findAll(findByCategoryId(
-                        categoryId).and(findByName(name)).and(findByDescription(description)),
+                .findAll(findByCategoryId(categoryId).and(findByName(name)).and(findByDescription(description)),
                         PageRequest.of(page, size));
 
         List<ProductItemDTO> products = result.getContent().stream()

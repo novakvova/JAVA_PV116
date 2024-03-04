@@ -86,7 +86,7 @@ const ProductListPage = () => {
     return (
         <>
             <h1>Список продуктів</h1>
-            <Link to={"/products/create"}>
+            <Link to={"/product/create"}>
                 <Button type="primary">
                     Додати
                 </Button>
@@ -126,9 +126,6 @@ const ProductListPage = () => {
                                 label="Категорія"
                                 name="categoryId"
                                 htmlFor="categoryId"
-                                rules={[
-                                    {required: true, message: 'Це поле є обов\'язковим!'},
-                                ]}
                             >
                                 <Select
                                     placeholder="Оберіть категорію: "
