@@ -1,9 +1,7 @@
 package org.example.services;
 
 import lombok.AllArgsConstructor;
-import org.example.dto.product.ProductCreateDTO;
-import org.example.dto.product.ProductItemDTO;
-import org.example.dto.product.ProductSearchResultDTO;
+import org.example.dto.product.*;
 import org.example.entities.CategoryEntity;
 import org.example.entities.ProductEntity;
 import org.example.entities.ProductImageEntity;
@@ -106,6 +104,70 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
 
         return new ProductSearchResultDTO(products, (int) result.getTotalElements());
+    }
+
+    @Override
+    public ProductItemDTO getById(Integer productId) {
+        var entity = productRepository.findById(productId).orElse(null);
+        if (entity == null) {
+            return null;
+        }
+
+        var product = productMapper.ProductItemDTOByProduct(entity);
+        product.setFiles(productImageRepository.findImageNamesByProduct(entity));
+
+        return product;
+    }
+
+    @Override
+    public ProductItemDTO edit(ProductEditDTO model) {
+        var p = productRepository.findById(model.getId());
+        if(p.isPresent())
+        {
+            try {
+                var product = p.get();
+                var imagesDb = product.getProductImages();
+                for (var image : imagesDb) {
+                    //Набір фото, які потрібно видалить на сервері
+                    if (isAnyImage(model.getOldPhotos(), image)) {
+                        productImageRepository.delete(image);
+                        storageService.deleteImage(image.getName());
+                    }
+                }
+                var cat = new CategoryEntity();
+                cat.setId(model.getCategory_id());
+                product.setName(model.getName());
+                product.setDescription(model.getDescription());
+                product.setPrice(model.getPrice());
+                product.setCategory(cat);
+                productRepository.save(product);
+                for (var img : model.getNewPhotos()) {
+                    var file = storageService.SaveImageBase64(img.getPhoto(), FileSaveFormat.WEBP);
+                    ProductImageEntity pi = new ProductImageEntity();
+                    pi.setName(file);
+                    pi.setDateCreated(LocalDateTime.now());
+                    pi.setPriority(img.getPriority());
+                    pi.setDelete(false);
+                    pi.setProduct(product);
+                    productImageRepository.save(pi);
+                }
+            }
+            catch(Exception ex) {
+                System.out.println("Edit product is problem " + ex.getMessage());
+            }
+        }
+
+        return null;
+    }
+
+    private boolean isAnyImage(List<ProductPhotoDTO> list, ProductImageEntity image) {
+        boolean result = false;
+
+        for(var item : list) {
+            if (item.getPhoto().equals(image.getName()))
+                return true;
+        }
+        return result;
     }
 }
 
