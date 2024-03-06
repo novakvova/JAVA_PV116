@@ -13,6 +13,6 @@ import java.util.List;
 public interface ProductImageRepository extends JpaRepository<ProductImageEntity, Integer> {
     ProductImageEntity findByName(String name);
 
-    @Query("SELECT pi.name FROM ProductImageEntity pi WHERE pi.product = :product")
+    @Query("SELECT pi.name FROM ProductImageEntity pi WHERE pi.product = :product ORDER BY pi.priority")
     List<String> findImageNamesByProduct(@Param("product") ProductEntity product);
 }

@@ -122,17 +122,22 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductItemDTO edit(ProductEditDTO model) {
         var p = productRepository.findById(model.getId());
-        if(p.isPresent())
-        {
+        if (p.isPresent()) {
             try {
                 var product = p.get();
                 var imagesDb = product.getProductImages();
+                //Видаляємо фото, якщо потрібно
                 for (var image : imagesDb) {
-                    //Набір фото, які потрібно видалить на сервері
-                    if (isAnyImage(model.getOldPhotos(), image)) {
+                    if (!isAnyImage(model.getOldPhotos(), image)) {
                         productImageRepository.delete(image);
                         storageService.deleteImage(image.getName());
                     }
+                }
+                //Оновляємо пріорітет фото у списку
+                for(var old : model.getOldPhotos()) {
+                    var imgUpdate = productImageRepository.findByName(old.getPhoto());
+                    imgUpdate.setPriority(old.getPriority());
+                    productImageRepository.save(imgUpdate);
                 }
                 var cat = new CategoryEntity();
                 cat.setId(model.getCategory_id());
@@ -151,8 +156,7 @@ public class ProductServiceImpl implements ProductService {
                     pi.setProduct(product);
                     productImageRepository.save(pi);
                 }
-            }
-            catch(Exception ex) {
+            } catch (Exception ex) {
                 System.out.println("Edit product is problem " + ex.getMessage());
             }
         }

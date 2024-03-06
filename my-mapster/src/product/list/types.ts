@@ -5,7 +5,7 @@ export interface IProductItem {
     description: string,
     files: string[],
     category: string,
-    categoryId: number,
+    category_id: number,
 }
 
 export interface IGetProducts {

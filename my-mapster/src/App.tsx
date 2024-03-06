@@ -6,6 +6,7 @@ import CategoryCreatePage from "./category/create/CategoryCreatePage.tsx";
 import CategoryEditPage from "./category/edit/CategoryEditPage.tsx";
 import ProductListPage from "./product/list/ProductListPage.tsx";
 import ProductCreatePage from "./product/create/ProductCreatePage.tsx";
+import ProductEditPage from "./product/edit/ProductEditPage.tsx";
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
                 <Route path={"product"}>
                     <Route index element={<ProductListPage/>} />
                     <Route path={"create"} element={<ProductCreatePage/>} />
+                    <Route path={"edit/:id"} element={<ProductEditPage/>} />
                 </Route>
             </Route>
         </Routes>

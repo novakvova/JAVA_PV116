@@ -1,17 +1,19 @@
 import React from 'react';
-import { ShoppingCartOutlined } from '@ant-design/icons';
+// import { ShoppingCartOutlined } from '@ant-design/icons';
 import {Badge, Button, Card, Col} from 'antd';
 import {Typography } from 'antd';
 import NotImage from '../../assets/imagenot.png';
 import {IProductItem} from "./types.ts";
 import {APP_ENV} from "../../env";
+import {Link} from "react-router-dom";
+import {EditOutlined} from '@ant-design/icons';
 
 const { Title } = Typography;
 const { Meta } = Card;
 
 const ProductCard : React.FC<IProductItem> = (props) => {
 
-    const {name, price, category, files} = props;
+    const {name, id, price, category, files} = props;
 
     return (
         <Col style={{padding: 10}} xxl={4} lg={6} md={8} sm={12}>
@@ -31,11 +33,16 @@ const ProductCard : React.FC<IProductItem> = (props) => {
                         />
                     }
                     actions={[
-                            <Button
-                                icon={<ShoppingCartOutlined/>} key="addToCart">
-                                До кошика
+                        <Link to={`/product/edit/${id}`}>
+                            <Button type="primary" icon={<EditOutlined/>}>
+                                Edit
                             </Button>
-                       ,
+                        </Link>
+                            // <Button
+                            //     icon={<ShoppingCartOutlined/>} key="addToCart">
+                            //     До кошика
+                            // </Button>
+
                     ]}
                 >
                     <Meta

@@ -108,8 +108,8 @@ const ProductCreatePage = () => {
                         label="Images"
                         valuePropName="files"
                         getValueFromEvent={(e: UploadChangeParam) => {
-                            const image = e?.fileList[0] as IUploadedFile;
-                            return image?.originFileObj;
+                            const image = e?.fileList as IUploadedFile[];
+                            return image.map(x=> x.originFileObj);
                         }}
                         rules={[{required: true, message: 'Choose image for category!'}]}
                     >
@@ -118,7 +118,6 @@ const ProductCreatePage = () => {
                             beforeUpload={() => false}
                             accept="image/*"
                             listType="picture-card"
-                            maxCount={10}
                         >
                             <div>
                                 <PlusOutlined/>
