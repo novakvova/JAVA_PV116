@@ -18,13 +18,13 @@ public class AccountController {
     private final AccountService service;
 
     @PostMapping("login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto dto) {
+    public ResponseEntity<Object> login(@RequestBody LoginDto dto) {
         try {
             var auth = service.login(dto);
             return ResponseEntity.ok(auth);
         }
         catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.badRequest().body("Невірно введені дані! Спробуйте ще раз!");
         }
     }
 }
