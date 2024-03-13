@@ -1,44 +1,64 @@
-import {Layout, Menu, MenuProps, theme} from "antd";
-import React from "react";
-import {LaptopOutlined, NotificationOutlined, UserOutlined} from "@ant-design/icons";
+import React, { useState } from 'react';
+import {
+    DesktopOutlined,
+    FileOutlined,
+    PieChartOutlined,
+    TeamOutlined,
+    UserOutlined,
+} from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+import { Layout, Menu } from 'antd';
+import {Link} from "react-router-dom";
+
 const {  Sider } = Layout;
 
+type MenuItem = Required<MenuProps>['items'][number];
+
+function getItem(
+    label: React.ReactNode,
+    key: React.Key,
+    icon?: React.ReactNode,
+    children?: MenuItem[],
+): MenuItem {
+    return {
+        key,
+        icon,
+        children,
+        label,
+    } as MenuItem;
+}
+
+const items: MenuItem[] = [
+    getItem(<Link to={"/"} >Категорії</Link>, '1', <PieChartOutlined />),
+    getItem(<Link to={"/product"}>Товари</Link>, '2', <DesktopOutlined />),
+    getItem('User', 'sub1', <UserOutlined />, [
+        getItem('Tom', '3'),
+        getItem('Bill', '4'),
+        getItem('Alex', '5'),
+    ]),
+    getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
+    getItem('Files', '9', <FileOutlined />),
+];
+
 const DefaultSider = () => {
-    const {
-        token: { colorBgContainer },
-    } = theme.useToken();
 
-    const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
-        (icon, index) => {
-            const key = String(index + 1);
-
-            return {
-                key: `sub${key}`,
-                icon: React.createElement(icon),
-                label: `subnav ${key}`,
-
-                children: new Array(4).fill(null).map((_, j) => {
-                    const subKey = index * 4 + j + 1;
-                    return {
-                        key: subKey,
-                        label: `option${subKey}`,
-                    };
-                }),
-            };
-        },
-    );
+    const [collapsed, setCollapsed] = useState(false);
+    //const [selectedKey, setSelectedKey] = useState('');
 
     return (
-        <Sider style={{ background: colorBgContainer }} width={200}>
-            <Menu
-                mode="inline"
-                defaultSelectedKeys={['1']}
-                defaultOpenKeys={['sub1']}
-                style={{ height: '100%' }}
-                items={items2}
-            />
+        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+            <div className="demo-logo-vertical" />
+            <Menu theme="dark"
+                  defaultSelectedKeys={['1']}
+                  //selectedKeys = {[selectedKey]}
+                  //onSelect = {({key})=> setSelectedKey(key)}
+                  mode="inline"
+                  items={items} />
         </Sider>
-    )
+
+
+    );
 }
 
 export default DefaultSider;
+

@@ -21,7 +21,7 @@ const DefaultHeader = () => {
                 style={{flex: 1, minWidth: 0}}
             >
                     <Menu.Item key={"products"}>
-                        <Link to={`/product`}>Продукти</Link>
+                        {/*<Link to={`/product`}>Продукти</Link>*/}
                     </Menu.Item>
             </Menu>
 
