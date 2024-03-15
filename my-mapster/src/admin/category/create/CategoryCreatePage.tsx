@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
 import {UploadChangeParam} from "antd/es/upload";
 import { PlusOutlined } from '@ant-design/icons';
-import http_common from "../../http_common.ts";
+import http_common from "../../../http_common.ts";
 
 const CategoryCreatePage = () => {
     const navigate = useNavigate();
@@ -19,7 +19,7 @@ const CategoryCreatePage = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            navigate('/');
+            navigate('/admin');
         }
         catch(ex) {
             console.log("Exception create category", ex);

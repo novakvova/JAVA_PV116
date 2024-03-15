@@ -2,8 +2,8 @@ import {Button, Col, Form, Input, Pagination, Row} from "antd";
 import {Link, useSearchParams} from "react-router-dom";
 import {ICategorySearch, IGetCategories} from "../types.ts";
 import {useEffect, useState} from "react";
-import http_common from "../../http_common.ts";
 import CategoryCard from "./CategoryCard.tsx";
+import http_common from "../../../http_common.ts";
 
 const CategoryListPage = () => {
 
@@ -82,7 +82,7 @@ const CategoryListPage = () => {
     return (
         <>
             <h1>Список категорій</h1>
-            <Link to={"/category/create"}>
+            <Link to={"/admin/category/create"}>
                 <Button type="primary" style={{margin: '5px'}}>
                     ADD +
                 </Button>

@@ -3,7 +3,7 @@ import {Button, Col, Collapse, Form, Input, Pagination, Row, Select} from "antd"
 import {useEffect, useState} from "react";
 import ProductCard from "./ProductCard.tsx";
 import {IGetProducts, IProductSearch} from "./types.ts";
-import http_common from "../../http_common.ts";
+import http_common from "../../../http_common.ts";
 import {ISelectItem} from "../../category/types.ts";
 
 const ProductListPage = () => {
@@ -86,7 +86,7 @@ const ProductListPage = () => {
     return (
         <>
             <h1>Список продуктів</h1>
-            <Link to={"/product/create"}>
+            <Link to={"/admin/product/create"}>
                 <Button type="primary">
                     Додати
                 </Button>

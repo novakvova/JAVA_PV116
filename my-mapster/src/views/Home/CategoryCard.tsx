@@ -1,10 +1,11 @@
-import {ICategoryItem} from "../types.ts";
+
 import {Button, Card, Col, Popconfirm, Typography} from "antd";
 import NotImage from '../../assets/imagenot.png';
 import Meta from "antd/es/card/Meta";
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import {Link} from "react-router-dom";
 import {APP_ENV} from "../../env";
+import {ICategoryItem} from "../../admin/category/types.ts";
 
 const { Title } = Typography;
 

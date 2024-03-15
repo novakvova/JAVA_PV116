@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
 import {ISelectItem, IUploadedFile} from "../../category/types.ts";
 import {useEffect, useState} from "react";
-import http_common from "../../http_common.ts";
+import http_common from "../../../http_common.ts";
 import {IProductCreate} from "./types.ts";
 
 const ProductCreatePage = () => {
@@ -30,7 +30,7 @@ const ProductCreatePage = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            navigate('/');
+            navigate('/admin/product');
         }
         catch(ex) {
             console.log("Exception create category", ex);

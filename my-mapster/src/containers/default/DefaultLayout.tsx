@@ -1,6 +1,5 @@
 import {Breadcrumb, Layout, theme} from "antd";
 import DefaultHeader from "./DefaultHeader";
-import DefaultSider from "./DefaultSider";
 import {Outlet} from "react-router-dom";
 import "./DefaultLayout.css"
 
@@ -12,7 +11,6 @@ const DefaultLayout = () => {
     } = theme.useToken();
     return (
         <Layout style={{ minHeight: '100vh' }}>
-            <DefaultSider/>
             <Layout>
                 <DefaultHeader/>
             <Content style={{ padding: '0 48px' }}>

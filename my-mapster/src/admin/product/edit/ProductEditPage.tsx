@@ -10,12 +10,12 @@ import {
     horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import {DndContext, PointerSensor, useSensor} from '@dnd-kit/core';
-import DraggableUploadListItem from '../../common/DraggableUploadListItem.tsx';
-import {ISelectItem} from "../../category/types.ts";
+import DraggableUploadListItem from '../../../common/DraggableUploadListItem.tsx';
 import {IProductItem} from "../list/types.ts";
-import http_common from "../../http_common.ts";
+import http_common from "../../../http_common.ts";
 import {IProductEdit, IProductEditPhoto} from "./types.ts";
-import {APP_ENV} from "../../env";
+import {APP_ENV} from "../../../env";
+import {ISelectItem} from "../../category/types.ts";
 
 const ProductEditPage : React.FC = () => {
     const navigate = useNavigate();
@@ -126,7 +126,7 @@ const ProductEditPage : React.FC = () => {
         try {
             console.log("Send Data", sendData);
             await http_common.put("/api/products", sendData);
-            navigate('/product');
+            navigate('/admin/product');
         }
         catch(ex) {
             console.log("Exception create category", ex);
