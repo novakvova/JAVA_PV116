@@ -33,6 +33,7 @@ public class JwtService {
         var roles = userRoleRepository.findByUser(user);
         return Jwts.builder()
                 .setSubject(format("%s,%s", user.getId(), user.getEmail()))
+                .claim("name", user.getLastName()+" "+user.getFirstName())
                 .claim("email", user.getEmail())
                 //.claim("image", user.getImage())
                 .claim("roles", roles.stream()                                      //витягується списочок ролей, які є у юзера
@@ -72,7 +73,6 @@ public class JwtService {
         catch(Exception ex) {
             return null;
         }
-
     }
     // метод повертає дату до якої живе токен
     public Date getExpirationDate(String token) {

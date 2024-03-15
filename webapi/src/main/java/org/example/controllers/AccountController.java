@@ -36,11 +36,8 @@ public class AccountController {
             {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-
             var auth = service.register(dto);
-
             return ResponseEntity.ok(auth);
-
         }
         catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
