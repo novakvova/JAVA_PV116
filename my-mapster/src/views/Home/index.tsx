@@ -31,6 +31,7 @@ const HomePage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                console.log('server request-------------');
                 const response = await http_common.get<IGetCategories>("/api/categories/search",
                     {
                         params: {

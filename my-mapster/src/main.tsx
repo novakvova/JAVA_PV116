@@ -7,6 +7,7 @@ import {store} from "./store";
 import {getLocalStorage} from "./utils/storage/localStorageUtils.ts";
 import {isTokenActive} from "./utils/storage/isTokenActive.ts";
 import {autoLogin} from "./store/accounts/accounts.slice.ts";
+import http_common from "./http_common.ts";
 
 const token = getLocalStorage('authToken');
 if (typeof token === 'string') {
