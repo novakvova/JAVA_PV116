@@ -22,11 +22,9 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
-                .cors(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth-> auth
+                .cors().and().csrf().disable()
+                .authorizeHttpRequests()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/api/account/**").permitAll()
                         .requestMatchers("/uploading/**").permitAll()
@@ -36,14 +34,14 @@ public class SecurityConfiguration {
                         .requestMatchers("/webjars/**").permitAll()
                         .requestMatchers("/rest-api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
-                .requestMatchers("/api/categories/search").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/categories/search").permitAll()
                 .requestMatchers("/api/categories/**").hasAuthority(Roles.Admin)
-                .requestMatchers(HttpMethod.GET,"/api/products").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/products/search").permitAll()
                 .requestMatchers("/api/products/**").hasAuthority(Roles.Admin)
                         .requestMatchers("/api/products/**").hasAuthority(Roles.Admin)
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(it->it.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .anyRequest().authenticated()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -51,49 +49,6 @@ public class SecurityConfiguration {
     }
 }
 
-/*
-@Configuration
-@EnableWebSecurity
-@RequiredArgsConstructor
-public class SecurityConfiguration {
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
-//    private final LogoutHandler logoutHandler;
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors().and().csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/account/**").permitAll()
-                .requestMatchers("/uploading/**").permitAll()
-                .requestMatchers("/static/**").permitAll()
-                .requestMatchers("/swagger-resources/**").permitAll()
-                .requestMatchers("/v2/api-docs/**").permitAll()
-                .requestMatchers("/webjars/**").permitAll()
-                .requestMatchers("/rest-api-docs/**").permitAll()
-                .requestMatchers("/swagger-ui/**").permitAll()
-//                .requestMatchers("/api/categories/**").permitAll()
-//                .requestMatchers(HttpMethod.GET,"/api/products").permitAll()
-                .requestMatchers("/api/categories/search").permitAll()
-                .requestMatchers("/api/categories/**").hasAuthority(Roles.Admin)
-                .requestMatchers(HttpMethod.GET,"/api/products").permitAll()
-                .requestMatchers("/api/products/**").hasAuthority(Roles.Admin)
-                .anyRequest().authenticated()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-//                .logout()
-//                .logoutUrl("/api/v1/auth/logout")
-//                .addLogoutHandler(logoutHandler)
-//                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-        ;
-
-        return http.build();
-    }
-}
-*/
 
 
