@@ -3,7 +3,7 @@ import {Button, Form, Input, Row, Select, Upload, UploadFile, UploadProps} from 
 import {useEffect, useState} from "react";
 import TextArea from "antd/es/input/TextArea";
 import {PlusOutlined} from "@ant-design/icons";
-import type { DragEndEvent } from '@dnd-kit/core';
+import type {DragEndEvent} from '@dnd-kit/core';
 import {
     arrayMove,
     SortableContext,
@@ -17,7 +17,7 @@ import {IProductEdit, IProductEditPhoto} from "./types.ts";
 import {APP_ENV} from "../../../env";
 import {ISelectItem} from "../../category/types.ts";
 
-const ProductEditPage : React.FC = () => {
+const ProductEditPage: React.FC = () => {
     const navigate = useNavigate();
 
     // const [messageApi, contextHolder] = message.useMessage();
@@ -29,7 +29,7 @@ const ProductEditPage : React.FC = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
 
     const sensor = useSensor(PointerSensor, {
-        activationConstraint: { distance: 10 },
+        activationConstraint: {distance: 10},
     });
 
     const [product, setProduct] = useState<IProductItem>({
@@ -44,17 +44,17 @@ const ProductEditPage : React.FC = () => {
 
     useEffect(() => {
         http_common.get<IProductItem>(`/api/products/${id}`)
-            .then(resp=> {
+            .then(resp => {
                 //console.log("product info", resp.data);
                 setProduct(resp.data);
             });
 
         http_common.get<ISelectItem[]>("/api/categories/selectList")
-            .then(resp=> {
+            .then(resp => {
                 //console.log("list categories", resp.data);
                 setCategories(resp.data);
             });
-    },[id]);
+    }, [id]);
 
     useEffect(() => {
         setDefaultData(product);
@@ -64,10 +64,10 @@ const ProductEditPage : React.FC = () => {
 
     const setDefaultData = (data: IProductItem | null) => {
         if (data) {
-            if (data.files?.length){
+            if (data.files?.length) {
                 setFileList([]);
             }
-            const newFileList : UploadFile[] = [];
+            const newFileList: UploadFile[] = [];
             for (let i = 0; i < data.files.length; i++) {
                 newFileList.push({
                     uid: data.files[i],
@@ -85,7 +85,7 @@ const ProductEditPage : React.FC = () => {
         }
     };
 
-    const onDragEnd = ({ active, over }: DragEndEvent) => {
+    const onDragEnd = ({active, over}: DragEndEvent) => {
         if (active.id !== over?.id) {
             setFileList((prev) => {
                 const activeIndex = prev.findIndex((i) => i.uid === active.id);
@@ -95,43 +95,66 @@ const ProductEditPage : React.FC = () => {
         }
     };
 
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    const handleChange: UploadProps['onChange'] = ({fileList: newFileList}) => {
         setFileList(newFileList);
     };
 
     const uploadButton = (
-        <button style={{ border: 0, background: 'none' }} type="button">
-            <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
+        <button style={{border: 0, background: 'none'}} type="button">
+            <PlusOutlined/>
+            <div style={{marginTop: 8}}>Upload</div>
         </button>
     );
 
+
+    function readFileAsDataURL(file: File): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                // When the file reading is completed, resolve the promise with the result (data URL)
+                if (typeof reader.result === 'string') {
+                    resolve(reader.result);
+                } else {
+                    reject(new Error('Failed to read file as data URL'));
+                }
+            };
+
+            // If there's an error reading the file, reject the promise
+            reader.onerror = () => {
+                reject(reader.error);
+            };
+
+            // Read the file asynchronously as a data URL
+            reader.readAsDataURL(file);
+        });
+    }
+
     const onSubmit = async (values: IProductEdit) => {
 
-        const oldPhotos : IProductEditPhoto[] = [];
+        const oldPhotos: IProductEditPhoto[] = [];
         const newPhotos: IProductEditPhoto[] = [];
-
-        for (let i = 0; i < fileList.length; i++) {
-            if (!fileList[i].size){
-                oldPhotos.push({photo: fileList[i].name, priority: i});
-            }
-            else {
-                const base64Content = fileList[i].thumbUrl?.split(",")[1];
-                newPhotos.push({photo: base64Content, priority: i});
-            }
-        }
-
-        const sendData: IProductEdit = {...values, id: Number(id), newPhotos: newPhotos, oldPhotos: oldPhotos};
-
         try {
+
+            for (let i = 0; i < fileList.length; i++) {
+                if (!fileList[i].size) {
+                    oldPhotos.push({photo: fileList[i].name, priority: i});
+                } else {
+                    if (fileList[i].originFileObj) {
+                        const base64Read = await readFileAsDataURL(fileList[i].originFileObj as File);
+                        newPhotos.push({photo: base64Read.split(",")[1], priority: i});
+                    }
+                }
+            }
+
+            const sendData: IProductEdit = {...values, id: Number(id), newPhotos: newPhotos, oldPhotos: oldPhotos};
+
             console.log("Send Data", sendData);
             await http_common.put("/api/products", sendData);
             navigate('/admin/product');
-        }
-        catch(ex) {
+        } catch (ex) {
             console.log("Exception create category", ex);
         }
-        console.log("data submit", sendData);
     }
 
     const optionsData = categories?.map(item => ({label: item.name, value: item.id}));
@@ -208,7 +231,8 @@ const ProductEditPage : React.FC = () => {
                         label="Фото"
                     >
                         <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
-                            <SortableContext items={fileList.map((i) => i.uid)} strategy={horizontalListSortingStrategy}>
+                            <SortableContext items={fileList.map((i) => i.uid)}
+                                             strategy={horizontalListSortingStrategy}>
                                 <Upload
                                     showUploadList={{showPreviewIcon: false}}
                                     beforeUpload={() => false}
@@ -217,7 +241,7 @@ const ProductEditPage : React.FC = () => {
                                     fileList={fileList}
                                     onChange={handleChange}
                                     itemRender={(originNode, file) => (
-                                        <DraggableUploadListItem originNode={originNode} file={file} />
+                                        <DraggableUploadListItem originNode={originNode} file={file}/>
                                     )}
                                 >
                                     {fileList.length >= 8 ? null : uploadButton}
@@ -231,7 +255,9 @@ const ProductEditPage : React.FC = () => {
                         <Button style={{margin: 10}} type="primary" htmlType="submit">
                             Зберети
                         </Button>
-                        <Button style={{margin: 10}} htmlType="button" onClick={() =>{ navigate('/product')}}>
+                        <Button style={{margin: 10}} htmlType="button" onClick={() => {
+                            navigate('/product')
+                        }}>
                             Cancel
                         </Button>
                     </Row>
